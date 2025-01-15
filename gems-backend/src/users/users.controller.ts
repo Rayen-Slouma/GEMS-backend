@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Delete, UseGuards } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { AuthGuard } from '../auth/gaurds/auth.guard';  // Fixed typo: 'gaurds' to 'guards'
+import { AuthGuard } from '../auth/gaurds/auth.guard';  // Correction du typo : 'gaurds' à 'guards'
 
 @ApiTags('users')
 @Controller('users')
@@ -16,17 +16,17 @@ import { AuthGuard } from '../auth/gaurds/auth.guard';  // Fixed typo: 'gaurds' 
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // Public route to fetch all users (no token required)
+  // Route publique pour récupérer tous les utilisateurs (pas de token requis)
   @ApiOperation({ summary: 'Get all users' })
   @Get()
   async getAllUsers() {
-    return this.usersService.findAll();  // Assuming you have a `findAll` method in your service
+    return this.usersService.findAll();  // Méthode findAll dans le service
   }
 
   @ApiOperation({ summary: 'Get user details by ID' })
   @ApiParam({ name: 'id', type: Number, description: 'User ID' })
   @Get(':id')
-  @UseGuards(AuthGuard)  // This route is protected by JWT token
+  @UseGuards(AuthGuard)  // Route protégée par un token JWT
   async getUserById(@Param('id') id: number) {
     return this.usersService.findById(id);
   }
@@ -35,11 +35,19 @@ export class UsersController {
   @ApiParam({ name: 'id', type: Number, description: 'User ID' })
   @ApiBody({ type: UpdateUserDto })
   @Patch(':id')
-  @UseGuards(AuthGuard)  // This route is also protected by JWT token
+  @UseGuards(AuthGuard)  // Route protégée par un token JWT
   async updateUser(
     @Param('id') id: number,
     @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.usersService.updateUser(id, updateUserDto);
+  }
+
+  // Nouvelle méthode pour supprimer un utilisateur (non protégée)
+  @ApiOperation({ summary: 'Delete user by ID' })
+  @ApiParam({ name: 'id', type: Number, description: 'User ID' })
+  @Delete(':id')
+  async deleteUser(@Param('id') id: number): Promise<void> {
+    return this.usersService.deleteUser(id);
   }
 }
