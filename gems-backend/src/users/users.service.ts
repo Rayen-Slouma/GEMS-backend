@@ -30,6 +30,11 @@ export class UsersService {
     return this.userRepository.findOne({ where: { id } });
   }
 
+  // New method to get all users
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find(); // Fetch all users
+  }
+
   async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
@@ -38,14 +43,5 @@ export class UsersService {
 
     Object.assign(user, updateUserDto);
     return this.userRepository.save(user);
-  }
-
-  // Nouvelle méthode DELETE
-  async deleteUser(id: number): Promise<void> {
-    const user = await this.userRepository.findOne({ where: { id } });
-    if (!user) {
-      throw new Error('User not found');
-    }
-    await this.userRepository.remove(user);
   }
 }
