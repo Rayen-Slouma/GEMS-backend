@@ -29,6 +29,7 @@ export class UsersService {
   async findById(id: number): Promise<User | undefined> {
     return this.userRepository.findOne({ where: { id } });
   }
+
   async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
@@ -37,5 +38,14 @@ export class UsersService {
 
     Object.assign(user, updateUserDto);
     return this.userRepository.save(user);
+  }
+
+  // Nouvelle méthode DELETE
+  async deleteUser(id: number): Promise<void> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new Error('User not found');
+    }
+    await this.userRepository.remove(user);
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Delete, UseGuards } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -33,5 +33,13 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     return this.usersService.updateUser(id, updateUserDto);
+  }
+
+  // Nouvelle méthode DELETE
+  @ApiOperation({ summary: 'Delete user by ID' })
+  @ApiParam({ name: 'id', type: Number, description: 'User ID' })
+  @Delete(':id')
+  async deleteUser(@Param('id') id: number): Promise<void> {
+    return this.usersService.deleteUser(id);
   }
 }
