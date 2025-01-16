@@ -20,6 +20,6 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
-  @Column()
+  @Column({ default: 'default.jpg' }) // Set a default profile picture
   profilePicture: string;
 }

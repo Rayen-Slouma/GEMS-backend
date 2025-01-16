@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '',
+      password: 'newpassword',
       database: 'Gems',
       autoLoadEntities: true,
       synchronize: true,
@@ -23,6 +24,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
     UsersModule,
     AuthModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
