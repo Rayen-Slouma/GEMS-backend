@@ -7,8 +7,6 @@ import { CategoriesModule } from './categories/categories.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { EventsModule } from './events/events.module';
-import { EventsModule } from './events/events.module';
-
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -19,7 +17,7 @@ import { EventsModule } from './events/events.module';
       password: '',
       database: 'Gems',
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
     }),
     ConfigModule.forRoot({
       isGlobal: true,
