@@ -1,5 +1,12 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+// Define the enum for categories
+export enum EventCategory {
+  MUSIC = 'Music',
+  CONCERT = 'Concert',
+  CINEMA = 'Cinema',
+}
+
 @Entity('events')
 export class Event {
   @PrimaryGeneratedColumn()
@@ -17,8 +24,12 @@ export class Event {
   @Column({ length: 255, nullable: true })
   eventPicture: string;
 
-  @Column({ length: 100 })
-  category: string;
+  // Use the enum for the category field
+  @Column({
+    type: 'enum',
+    enum: EventCategory,
+  })
+  category: EventCategory;
 
   @Column('date')
   startDate: string;
