@@ -14,10 +14,10 @@ import { EventsModule } from './events/events.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'newpassword',
+      password: '',
       database: 'Gems',
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
     }),
     ConfigModule.forRoot({
       isGlobal: true,
