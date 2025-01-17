@@ -2,32 +2,55 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Event } from './entities/event.entity';
+import { CreateEventDto } from './dtos/create-event.dto';
+import { User } from '../users/entities/user.entity';
+import { Category } from '../categories/entities/category.entity';
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectRepository(Event)
-    private eventRepository: Repository<Event>,
+    private readonly eventRepository: Repository<Event>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
   ) {}
 
-  findAll(): Promise<Event[]> {
-    return this.eventRepository.find();
-  }
+  async createEvent(createEventDto: CreateEventDto): Promise<Event> {
+    const { organizers, category, ...eventData } = createEventDto;
 
-  findOne(id: number): Promise<Event> {
-    return this.eventRepository.findOneBy({ id });
-  }
+    // Resolve organizers (convert string IDs to User entities)
+    const organizerEntities = await this.userRepository.findByIds(organizers);
 
-  create(event: Event): Promise<Event> {
-    return this.eventRepository.save(event);
-  }
+    if (organizerEntities.length !== organizers.length) {
+      throw new Error('Some organizers could not be found');
+    }
 
-  async update(id: number, event: Partial<Event>): Promise<Event> {
-    await this.eventRepository.update(id, event);
-    return this.eventRepository.findOneBy({ id });
-  }
+    // Resolve category (find or create a category by name)
+    let categoryEntity = await this.categoryRepository.findOne({
+      where: { name: category },
+    });
 
-  async remove(id: number): Promise<void> {
-    await this.eventRepository.delete(id);
+    if (!categoryEntity) {
+      categoryEntity = this.categoryRepository.create({ name: category });
+      categoryEntity = await this.categoryRepository.save(categoryEntity);
+    }
+
+    // Create a new event
+    const newEvent = this.eventRepository.create({
+      ...eventData,
+      organizers: organizerEntities,
+      category: categoryEntity,
+    });
+
+    // Save the event
+    return await this.eventRepository.save(newEvent);
+  }
+  async findById(id: string): Promise<Event | null> {
+    return this.eventRepository.findOne({
+      where: { id: parseInt(id, 10) },
+      relations: ['organizers', 'category'], // Include relations if needed
+    });
   }
 }

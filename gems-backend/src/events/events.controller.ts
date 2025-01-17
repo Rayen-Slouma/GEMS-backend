@@ -1,33 +1,29 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  NotFoundException,
+} from '@nestjs/common';
 import { EventsService } from './events.service';
-import { Event } from './entities/event.entity';
+import { CreateEventDto } from './dtos/create-event.dto';
 
 @Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
-  @Get()
-  findAll() {
-    return this.eventsService.findAll();
+  @Post()
+  async createEvent(@Body() createEventDto: CreateEventDto) {
+    return this.eventsService.createEvent(createEventDto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.eventsService.findOne(+id);
-  }
-
-  @Post()
-  create(@Body() event: Event) {
-    return this.eventsService.create(event);
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() event: Partial<Event>) {
-    return this.eventsService.update(+id, event);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.eventsService.remove(+id);
+  async getEventById(@Param('id') id: string) {
+    const event = await this.eventsService.findById(id);
+    if (!event) {
+      throw new NotFoundException(`Event with id ${id} not found`);
+    }
+    return event;
   }
 }
