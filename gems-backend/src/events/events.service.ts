@@ -47,6 +47,13 @@ export class EventsService {
     // Save the event
     return await this.eventRepository.save(newEvent);
   }
+
+  async findAll(): Promise<Event[]> {
+    return this.eventRepository.find({
+      relations: ['organizers', 'category'], // Include relations if needed
+    });
+  }
+
   async findById(id: string): Promise<Event | null> {
     return this.eventRepository.findOne({
       where: { id: parseInt(id, 10) },
