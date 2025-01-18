@@ -56,6 +56,34 @@ export class EventsService {
     });
   }
 
+  async updateEvent(id: string, updateEventData: any): Promise<Event | null> {
+    // Recherche de l'événement dans la base de données par son ID
+    const event = await this.eventRepository.findOne({ where: { id: parseInt(id, 10) } });
+  
+    if (!event) {
+      return null;  // Si l'événement n'existe pas, retourne null
+    }
+  
+    // Mettre à jour l'événement avec les données reçues (sans modifier les organisateurs)
+    const { name, description, location, startDate, endDate, ticketLimit, price, mode, sectionColor, textColor, isActive } = updateEventData;
+  
+    event.name = name || event.name;
+    event.description = description || event.description;
+    event.location = location || event.location;
+    event.startDate = startDate || event.startDate;
+    event.endDate = endDate || event.endDate;
+    event.ticketLimit = ticketLimit || event.ticketLimit;
+    event.price = price || event.price;
+    event.mode = mode || event.mode;
+    event.sectionColor = sectionColor || event.sectionColor;
+    event.textColor = textColor || event.textColor;
+    event.isActive = isActive !== undefined ? isActive : event.isActive;
+  
+    // Sauvegarde l'événement mis à jour dans la base de données
+    return await this.eventRepository.save(event);
+  }
+  
+
   async deleteEvent(id: string): Promise<boolean> {
     const deleteResult = await this.eventRepository.delete({ id: parseInt(id, 10) });
     return deleteResult.affected > 0; // Returns true if a row was deleted

@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dtos/create-event.dto';
+import { Put } from '@nestjs/common';
 
 @Controller('events')
 export class EventsController {
@@ -32,6 +33,15 @@ export class EventsController {
     }
     return event;
   }
+
+  @Put(':id')
+async updateEvent(@Param('id') id: string, @Body() updateEventData: any) {
+  const updatedEvent = await this.eventsService.updateEvent(id, updateEventData);
+  if (!updatedEvent) {
+    throw new NotFoundException(`Event with id ${id} not found`);
+  }
+  return updatedEvent;
+}
 
   @Delete(':id')
   async deleteEvent(@Param('id') id: string) {
