@@ -6,12 +6,12 @@ import { EventsService } from './events.service';
 import { Event } from './entities/event.entity';
 import { User } from '../users/entities/user.entity';
 import { Category } from '../categories/entities/category.entity';
-import { UsersModule } from '../users/users.module';
+import { AuthModule } from '../auth/auth.module'; // Import AuthModule
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Event, User, Category]), // Include Category
-    UsersModule,
+    AuthModule,
   ],
   controllers: [EventsController],
   providers: [EventsService],

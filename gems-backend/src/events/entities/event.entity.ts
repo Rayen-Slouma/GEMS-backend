@@ -3,8 +3,6 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable,
   ManyToOne,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity'; // Use a relative path to the User entity
@@ -45,13 +43,9 @@ export class Event {
   @Column({ length: 50 })
   mode: string; // Event mode (e.g., 'online' or 'onsite')
 
-  @ManyToMany(() => User, (user) => user.events)
-  @JoinTable({
-    name: 'event_organizers', // Name of the join table
-    joinColumn: { name: 'eventId', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'userId', referencedColumnName: 'id' },
-  })
-  organizers: User[]; // List of organizers
+  // New: Organizer column with a foreign key to the User table
+  @ManyToOne(() => User, (user) => user.events, { eager: true })
+  organizer: User; // Event organizer (single user)
 
   @Column({ length: 7, default: '#ffffff' })
   sectionColor: string; // Section background color (hex code)

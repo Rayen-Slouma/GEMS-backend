@@ -19,13 +19,11 @@ export class EventsService {
   ) {}
 
   async createEvent(createEventDto: CreateEventDto): Promise<Event> {
-    const { organizers, category, ...eventData } = createEventDto;
+       const { category,organizer, ...eventData } = createEventDto;
 
-    const organizerEntities = await this.userRepository.findByIds(organizers);
-    if (organizerEntities.length !== organizers.length) {
-      throw new Error('Some organizers could not be found');
-    }
+  
 
+    // Find or create the category
     let categoryEntity = await this.categoryRepository.findOne({
       where: { name: category },
     });
@@ -34,26 +32,31 @@ export class EventsService {
       categoryEntity = this.categoryRepository.create({ name: category });
       categoryEntity = await this.categoryRepository.save(categoryEntity);
     }
-
-    const newEvent = this.eventRepository.create({
-      ...eventData,
-      organizers: organizerEntities,
-      category: categoryEntity,
+    const userEntity = await this.userRepository.findOne({
+      where: { id: organizer},
     });
 
+    // Create the new event
+    const newEvent = this.eventRepository.create({
+      ...eventData,
+      category: categoryEntity,
+      organizer: userEntity,
+    });
+
+    // Save the event in the database
     return await this.eventRepository.save(newEvent);
   }
 
   async findAll(): Promise<Event[]> {
     return this.eventRepository.find({
-      relations: ['organizers', 'category'],
+      relations: ['organizer', 'category'],
     });
   }
 
   async findById(id: string): Promise<Event | null> {
     return this.eventRepository.findOne({
       where: { id: parseInt(id, 10) },
-      relations: ['organizers', 'category'],
+      relations: ['organizer', 'category'],
     });
   }
 
@@ -61,10 +64,10 @@ export class EventsService {
     const event = await this.eventRepository.findOne({ where: { id: parseInt(id, 10) } });
 
     if (!event) {
-      return null;  // If the event does not exist, return null
+      return null; // If the event does not exist, return null
     }
 
-    // Update the event with the received data (without modifying organizers)
+    // Update the event with the received data (without modifying the organizer)
     const { name, description, location, startDate, endDate, ticketLimit, price, mode, sectionColor, textColor, isActive, category } = updateEventData;
 
     event.name = name || event.name;

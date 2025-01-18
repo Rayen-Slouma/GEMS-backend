@@ -44,7 +44,7 @@ export class CreateEventDto {
 
   @IsArray()
   @IsString({ each: true })
-  organizers: string[];
+  organizer: number;
 
   @IsString()
   @IsOptional()

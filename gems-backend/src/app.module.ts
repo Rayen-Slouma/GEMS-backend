@@ -11,6 +11,7 @@ import { EventsModule } from './events/events.module';
 import { LandingpageModule } from './landingpage/landingpage.module';
 import { SearchModule } from './search/search.module';
 import { AlleventsModule } from './allevents/allevents.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { AlleventsModule } from './allevents/allevents.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'admin',
+      password: '',
       database: 'Gems',
       autoLoadEntities: true,
       synchronize: false,
@@ -34,6 +35,7 @@ import { AlleventsModule } from './allevents/allevents.module';
     AlleventsModule,
     AuthModule,
     CategoriesModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

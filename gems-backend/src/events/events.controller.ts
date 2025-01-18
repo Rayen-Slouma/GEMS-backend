@@ -20,7 +20,6 @@ export class EventsController {
   async createEvent(@Body() createEventDto: CreateEventDto) {
     return this.eventsService.createEvent(createEventDto);
   }
-
   @Get()
   async getAllEvents() {
     return this.eventsService.findAll();
