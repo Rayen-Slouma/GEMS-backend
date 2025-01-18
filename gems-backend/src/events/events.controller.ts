@@ -4,6 +4,7 @@ import {
   Body,
   Get,
   Param,
+  Delete,
   NotFoundException,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
@@ -30,5 +31,14 @@ export class EventsController {
       throw new NotFoundException(`Event with id ${id} not found`);
     }
     return event;
+  }
+
+  @Delete(':id')
+  async deleteEvent(@Param('id') id: string) {
+    const result = await this.eventsService.deleteEvent(id);
+    if (!result) {
+      throw new NotFoundException(`Event with id ${id} not found`);
+    }
+    return { message: `Event with id ${id} successfully deleted` };
   }
 }

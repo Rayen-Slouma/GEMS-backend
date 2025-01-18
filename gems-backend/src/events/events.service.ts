@@ -20,14 +20,11 @@ export class EventsService {
   async createEvent(createEventDto: CreateEventDto): Promise<Event> {
     const { organizers, category, ...eventData } = createEventDto;
 
-    // Resolve organizers (convert string IDs to User entities)
     const organizerEntities = await this.userRepository.findByIds(organizers);
-
     if (organizerEntities.length !== organizers.length) {
       throw new Error('Some organizers could not be found');
     }
 
-    // Resolve category (find or create a category by name)
     let categoryEntity = await this.categoryRepository.findOne({
       where: { name: category },
     });
@@ -37,27 +34,30 @@ export class EventsService {
       categoryEntity = await this.categoryRepository.save(categoryEntity);
     }
 
-    // Create a new event
     const newEvent = this.eventRepository.create({
       ...eventData,
       organizers: organizerEntities,
       category: categoryEntity,
     });
 
-    // Save the event
     return await this.eventRepository.save(newEvent);
   }
 
   async findAll(): Promise<Event[]> {
     return this.eventRepository.find({
-      relations: ['organizers', 'category'], // Include relations if needed
+      relations: ['organizers', 'category'],
     });
   }
 
   async findById(id: string): Promise<Event | null> {
     return this.eventRepository.findOne({
       where: { id: parseInt(id, 10) },
-      relations: ['organizers', 'category'], // Include relations if needed
+      relations: ['organizers', 'category'],
     });
+  }
+
+  async deleteEvent(id: string): Promise<boolean> {
+    const deleteResult = await this.eventRepository.delete({ id: parseInt(id, 10) });
+    return deleteResult.affected > 0; // Returns true if a row was deleted
   }
 }
