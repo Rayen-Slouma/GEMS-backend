@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
+import { CategoriesModule } from './categories/categories.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { EventsModule } from './events/events.module';
@@ -26,11 +27,12 @@ import { AlleventsModule } from './allevents/allevents.module';
       isGlobal: true,
     }),
     UsersModule,
-    AuthModule,
     EventsModule,
     LandingpageModule,
     SearchModule,
     AlleventsModule,
+    AuthModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

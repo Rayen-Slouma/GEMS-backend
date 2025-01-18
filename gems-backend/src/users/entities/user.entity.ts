@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 
+import { Event } from '../../events/entities/event.entity';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
@@ -22,4 +23,7 @@ export class User {
 
   @Column({ default: 'default.jpg' }) // Set a default profile picture
   profilePicture: string;
+
+  @ManyToMany(() => Event, (event) => event.organizers)
+  events: Event[]; // Events organized by the user
 }

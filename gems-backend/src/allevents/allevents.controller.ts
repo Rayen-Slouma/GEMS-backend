@@ -1,20 +1,30 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { AlleventsService } from './allevents.service';
 import { Event } from 'src/events/entities/event.entity';
+import { Category } from 'src/categories/entities/category.entity';
 
 @Controller('allevents')
 export class AlleventsController {
   constructor(private readonly alleventsService: AlleventsService) {}
 
-  // Get all events
+  // Fetch all events
   @Get()
-  findAll(): Promise<Event[]> {
+  async findAll(): Promise<Event[]> {
+    console.log('Fetching all events');
     return this.alleventsService.findAll();
   }
 
-  // Get events by category
-  @Get(':category')
-  findByCategory(@Param('category') category: string): Promise<Event[]> {
-    return this.alleventsService.findByCategory(category);
+  // Fetch events by category ID
+  @Get('category/:id')
+  async findByCategory(@Param('id') id: number): Promise<Event[]> {
+    console.log(`Fetching events for category with ID: ${id}`);
+    return this.alleventsService.findByCategory(id);
+  }
+
+  // Fetch all categories
+  @Get('categories')
+  async findAllCategories(): Promise<Category[]> {
+    console.log('Fetching all categories');
+    return this.alleventsService.findAllCategories();
   }
 }

@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, MoreThanOrEqual } from 'typeorm';  // Import MoreThanOrEqual
 import { Event } from '../events/entities/event.entity';
-import { MoreThanOrEqual } from 'typeorm';  // Import MoreThanOrEqual
 
 @Injectable()
 export class LandingpageService {
@@ -12,13 +11,13 @@ export class LandingpageService {
   ) {}
 
   async getUpcomingEvents(): Promise<Event[]> {
-    // Get the current date in "YYYY-MM-DD" format
-    const currentDate = new Date().toISOString().split('T')[0];  // Format as string (YYYY-MM-DD)
-    
-    // Fetch upcoming events where startDate is greater than or equal to current date
+    // Get the current date as a Date object
+    const currentDate = new Date();
+
+    // Fetch upcoming events where startDate is greater than or equal to the current date
     const events = await this.eventRepository.find({
       where: {
-        startDate: MoreThanOrEqual(currentDate),  // Compare with the formatted string
+        startDate: MoreThanOrEqual(currentDate), // Compare with Date object
       },
       order: {
         startDate: 'ASC',  // Order events by start date, ascending
