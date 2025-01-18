@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -18,7 +19,7 @@ import { AlleventsModule } from './allevents/allevents.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '',
+      password: 'admin',
       database: 'Gems',
       autoLoadEntities: true,
       synchronize: false,

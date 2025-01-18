@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -57,16 +58,15 @@ export class EventsService {
   }
 
   async updateEvent(id: string, updateEventData: any): Promise<Event | null> {
-    // Recherche de l'événement dans la base de données par son ID
     const event = await this.eventRepository.findOne({ where: { id: parseInt(id, 10) } });
-  
+
     if (!event) {
-      return null;  // Si l'événement n'existe pas, retourne null
+      return null;  // If the event does not exist, return null
     }
-  
-    // Mettre à jour l'événement avec les données reçues (sans modifier les organisateurs)
-    const { name, description, location, startDate, endDate, ticketLimit, price, mode, sectionColor, textColor, isActive } = updateEventData;
-  
+
+    // Update the event with the received data (without modifying organizers)
+    const { name, description, location, startDate, endDate, ticketLimit, price, mode, sectionColor, textColor, isActive, category } = updateEventData;
+
     event.name = name || event.name;
     event.description = description || event.description;
     event.location = location || event.location;
@@ -78,11 +78,20 @@ export class EventsService {
     event.sectionColor = sectionColor || event.sectionColor;
     event.textColor = textColor || event.textColor;
     event.isActive = isActive !== undefined ? isActive : event.isActive;
-  
-    // Sauvegarde l'événement mis à jour dans la base de données
+
+    // Handle category update
+    if (category) {
+      let categoryEntity = await this.categoryRepository.findOne({ where: { name: category } });
+      if (!categoryEntity) {
+        categoryEntity = this.categoryRepository.create({ name: category });
+        categoryEntity = await this.categoryRepository.save(categoryEntity);
+      }
+      event.category = categoryEntity;
+    }
+
+    // Save the updated event in the database
     return await this.eventRepository.save(event);
   }
-  
 
   async deleteEvent(id: string): Promise<boolean> {
     const deleteResult = await this.eventRepository.delete({ id: parseInt(id, 10) });
