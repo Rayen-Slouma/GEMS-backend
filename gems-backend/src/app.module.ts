@@ -14,7 +14,7 @@ import { EventsModule } from './events/events.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '',
+      password: 'newpassword',
       database: 'Gems',
       autoLoadEntities: true,
       synchronize: true,
