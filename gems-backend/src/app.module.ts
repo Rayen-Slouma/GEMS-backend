@@ -23,7 +23,7 @@ import { ReservationsModule } from './reservations/reservations.module';
       password: 'admin',
       database: 'Gems',
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
     }),
     ConfigModule.forRoot({
       isGlobal: true,

@@ -24,6 +24,11 @@ export class ReservationsController {
     return this.reservationsService.findOne(+id);
   }
 
+  @Get('event/:eventId/seats')
+  findReservedSeats(@Param('eventId') eventId: string): Promise<number[]> {
+    return this.reservationsService.findReservedSeats(+eventId);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string): Promise<void> {
     return this.reservationsService.remove(+id);

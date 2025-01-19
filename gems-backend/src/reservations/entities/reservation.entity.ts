@@ -17,6 +17,6 @@ export class Reservation {
   @Column('datetime')
   reservationDate: Date;
 
-  @Column()
-  seatNumber: string; // Add seat number
+  @Column('int')
+  seatNumber: number; // Store seat number as integer
 }

@@ -32,28 +32,18 @@ export class ReservationsService {
 
     // Check if the seat is already reserved
     const existingReservation = await this.reservationsRepository.findOne({
-      where: { event: { id: event.id }, seatNumber: createReservationDto.seatNumber },
+      where: { event: { id: event.id }, seatNumber: parseInt(createReservationDto.seatNumber, 10) },
     });
 
     if (existingReservation) {
       throw new ConflictException('Seat is already reserved');
     }
 
-    // Check if there are available places
-    const reservedSeatsCount = await this.reservationsRepository.count({ where: { event: { id: event.id } } });
-    if (reservedSeatsCount >= event.ticketLimit) {
-      throw new ConflictException('No available places');
-    }
-
     const reservation = new Reservation();
     reservation.user = user;
     reservation.event = event;
     reservation.reservationDate = createReservationDto.reservationDate;
-    reservation.seatNumber = createReservationDto.seatNumber;
-
-    // Decrease the number of available places
-    event.ticketLimit -= 1;
-    await this.eventsRepository.save(event);
+    reservation.seatNumber = parseInt(createReservationDto.seatNumber, 10);
 
     return this.reservationsRepository.save(reservation);
   }
@@ -64,6 +54,11 @@ export class ReservationsService {
 
   findOne(id: number): Promise<Reservation> {
     return this.reservationsRepository.findOneBy({ id });
+  }
+
+  async findReservedSeats(eventId: number): Promise<number[]> {
+    const reservations = await this.reservationsRepository.find({ where: { event: { id: eventId } } });
+    return reservations.map(reservation => reservation.seatNumber);
   }
 
   async remove(id: number): Promise<void> {
