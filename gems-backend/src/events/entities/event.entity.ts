@@ -6,9 +6,11 @@ import {
   ManyToMany,
   JoinTable,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity'; // Use a relative path to the User entity
 import { Category } from '../../categories/entities/category.entity';
+import { Reservation } from '../../reservations/entities/reservation.entity';
 
 @Entity('events')
 export class Event {
@@ -61,4 +63,7 @@ export class Event {
 
   @Column('boolean', { default: true })
   isActive: boolean; // Whether the event is active
+
+  @OneToMany(() => Reservation, (reservation) => reservation.event)
+  reservations: Reservation[]; // Reservations for the event
 }

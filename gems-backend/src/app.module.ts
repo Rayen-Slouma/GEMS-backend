@@ -11,6 +11,7 @@ import { EventsModule } from './events/events.module';
 import { LandingpageModule } from './landingpage/landingpage.module';
 import { SearchModule } from './search/search.module';
 import { AlleventsModule } from './allevents/allevents.module';
+import { ReservationsModule } from './reservations/reservations.module';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { AlleventsModule } from './allevents/allevents.module';
       password: 'admin',
       database: 'Gems',
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
     }),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -34,6 +35,7 @@ import { AlleventsModule } from './allevents/allevents.module';
     AlleventsModule,
     AuthModule,
     CategoriesModule,
+    ReservationsModule, // Import ReservationsModule
   ],
   controllers: [AppController],
   providers: [AppService],

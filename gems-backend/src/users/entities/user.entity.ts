@@ -1,6 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+/* eslint-disable prettier/prettier */
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
 
 import { Event } from '../../events/entities/event.entity';
+import { Reservation } from '../../reservations/entities/reservation.entity';
+
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
@@ -26,4 +29,7 @@ export class User {
 
   @ManyToMany(() => Event, (event) => event.organizers)
   events: Event[]; // Events organized by the user
+
+  @OneToMany(() => Reservation, (reservation) => reservation.user)
+  reservations: Reservation[]; // Reservations made by the user
 }
