@@ -56,6 +56,15 @@ export class EventsService {
     });
   }
 
+  async findAllByOrganizer(userId: number): Promise<Event[]> {
+    return this.eventRepository
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.organizers', 'organizer')
+      .leftJoinAndSelect('event.category', 'category')
+      .where('organizer.id = :userId', { userId })
+      .getMany();
+  }
+
   async findById(id: string): Promise<Event | null> {
     return this.eventRepository.findOne({
       where: { id: parseInt(id, 10) },

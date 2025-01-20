@@ -8,6 +8,7 @@ import {
   Delete,
   NotFoundException,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dtos/create-event.dto';
@@ -22,7 +23,10 @@ export class EventsController {
   }
 
   @Get()
-  async getAllEvents() {
+  async getAllEvents(@Query('organizerId') organizerId: string) {
+    if (organizerId) {
+      return this.eventsService.findAllByOrganizer(parseInt(organizerId, 10));
+    }
     return this.eventsService.findAll();
   }
 
