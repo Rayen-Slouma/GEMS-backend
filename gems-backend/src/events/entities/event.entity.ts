@@ -26,7 +26,7 @@ export class Event {
   @Column({ length: 255 })
   location: string; // Event location
 
-  @Column({ length: 255, nullable: true })
+  @Column({ type: 'longtext', nullable: true })
   eventPicture: string; // Cover photo URL
 
   @ManyToOne(() => Category, (category) => category.events, { eager: true })

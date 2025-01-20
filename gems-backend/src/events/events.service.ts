@@ -80,7 +80,7 @@ export class EventsService {
     }
 
     // Update the event with the received data (without modifying organizers)
-    const { name, description, location, startDate, endDate, ticketLimit, price, mode, sectionColor, textColor, isActive, category } = updateEventData;
+    const { name, description, location, startDate, endDate, ticketLimit, price, mode, sectionColor, textColor, isActive, category, eventPicture } = updateEventData;
 
     event.name = name || event.name;
     event.description = description || event.description;
@@ -93,6 +93,7 @@ export class EventsService {
     event.sectionColor = sectionColor || event.sectionColor;
     event.textColor = textColor || event.textColor;
     event.isActive = isActive !== undefined ? isActive : event.isActive;
+    event.eventPicture = eventPicture || event.eventPicture;
 
     // Handle category update
     if (category) {
