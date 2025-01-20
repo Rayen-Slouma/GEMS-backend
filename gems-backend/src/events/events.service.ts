@@ -41,7 +41,13 @@ export class EventsService {
       category: categoryEntity,
     });
 
-    return await this.eventRepository.save(newEvent);
+    const savedEvent = await this.eventRepository.save(newEvent);
+
+    // Update the event_organizers table
+    savedEvent.organizers = organizerEntities;
+    await this.eventRepository.save(savedEvent);
+
+    return savedEvent;
   }
 
   async findAll(): Promise<Event[]> {

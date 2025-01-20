@@ -65,5 +65,5 @@ export class Event {
   isActive: boolean; // Whether the event is active
 
   @OneToMany(() => Reservation, (reservation) => reservation.event)
-  reservations: Reservation[]; // Reservations for the event
+  reservations: Reservation[]; // List of reservations
 }
