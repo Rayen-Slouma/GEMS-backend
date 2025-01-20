@@ -113,4 +113,17 @@ export class EventsService {
     const deleteResult = await this.eventRepository.delete({ id: parseInt(id, 10) });
     return deleteResult.affected > 0; // Returns true if a row was deleted
   }
+
+  async getOrganizersByEventId(eventId: number): Promise<User[]> {
+    const event = await this.eventRepository.findOne({
+      where: { id: eventId },
+      relations: ['organizers'],
+    });
+
+    if (!event) {
+      throw new Error('Event not found');
+    }
+
+    return event.organizers;
+  }
 }

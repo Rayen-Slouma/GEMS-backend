@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dtos/create-event.dto';
+import { User } from '../users/entities/user.entity';
 
 @Controller('events')
 export class EventsController {
@@ -37,6 +38,11 @@ export class EventsController {
       throw new NotFoundException(`Event with id ${id} not found`);
     }
     return event;
+  }
+
+  @Get(':id/organizers')
+  async getOrganizersByEventId(@Param('id') id: string): Promise<User[]> {
+    return this.eventsService.getOrganizersByEventId(parseInt(id, 10));
   }
 
   @Patch(':id')
